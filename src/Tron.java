@@ -1,18 +1,21 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.util.*;
 
 public class Tron extends JFrame {
 
     String title = "Animation Template";
-    Color background = Color.BLUE;
+    Color background = Color.BLACK;
     int delay = 10;
 
-    // Ваши переменные
+    private final static  int GAME_FIELD_WIDTH = 100;
+    private final static  int GAME_FIELD_HEIGHT = 100;
+
+    private GameField gameField;
 
     void start() {
         // код для инициализации
+        gameField = new GameField(GAME_FIELD_WIDTH, GAME_FIELD_HEIGHT);
 
     }
 
@@ -22,6 +25,8 @@ public class Tron extends JFrame {
     }
 
     void draw(Graphics2D g2) {
+        if (gameField != null)
+        gameField.draw(g2, getWidth(), getHeight());
 
         // код для рисования следующего кадра
 
@@ -52,19 +57,20 @@ public class Tron extends JFrame {
         add(panel);
 
         addComponentListener(new ComponentAdapter() {
-			@Override
-			public void componentShown(ComponentEvent arg0) {
-				start();
+            @Override
+            public void componentResized(ComponentEvent e) {
+            start();
+                javax.swing.Timer timer = new javax.swing.Timer(delay, new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        update();
+                        repaint();
+                    }
+                });
+                timer.start();
+            }
 
-				javax.swing.Timer timer = new javax.swing.Timer(delay, new ActionListener() {
-		            public void actionPerformed(ActionEvent e) {
-		                update();
-		                repaint();
-		            }
-		        });
-		        timer.start();
-			}
-		});
+        });
+
 
         setVisible(true);
     }
@@ -84,8 +90,8 @@ public class Tron extends JFrame {
         public void paintComponent(Graphics g) {
             Graphics2D g2 = (Graphics2D) g;
             RenderingHints hints = new RenderingHints(
-                RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON
+                    RenderingHints.KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON
             );
             g2.setRenderingHints(hints);
 
@@ -95,3 +101,4 @@ public class Tron extends JFrame {
     }
 
 }
+
